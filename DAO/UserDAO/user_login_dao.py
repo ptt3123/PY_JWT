@@ -24,5 +24,14 @@ class UserLoginDAO(UserDAO):
 
     async def read_user_by_email(self, email: str) -> User | None:
         """"""
-        async with self._session_maker() as session:
-            return None
+        query = select(User).where(User.email.__eq__(email))
+
+        try:
+            async with self._session_maker() as session:
+                result = await session.execute(query)
+                user = result.fetchone()
+
+        except SQLAlchemyError as e:
+            raise Exception(str(e))
+
+        return user[0]
