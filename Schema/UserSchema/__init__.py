@@ -1,0 +1,1 @@
+from .user_private_info import UserPrivateInfo
