@@ -1,1 +1,1 @@
-from .user_private_info import UserPrivateInfo
+from .user_register_schema import UserRegisterSchema
