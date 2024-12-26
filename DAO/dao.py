@@ -1,5 +1,4 @@
 from abc import ABC
-from sqlalchemy.exc import SQLAlchemyError
 from database import async_session_maker
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
