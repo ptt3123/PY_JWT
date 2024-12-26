@@ -1,7 +1,7 @@
 from fastapi import Depends
 
-from exception import METHOD_NOT_FOUND_EXCEPTION
 from DAO.UserDAO import UserLoginDAO
+from exception import METHOD_NOT_FOUND_EXCEPTION
 from Service.UserService.UserLoginService import *
 
 

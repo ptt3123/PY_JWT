@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Request, Depends
 
-from DTO import TokenBaseDTO
 from Dependency import get_login_service
 from exception import (USER_NOT_FOUND_EXCEPTION,
                        TOO_MUCH_LOGIN_REQUEST_EXCEPTION)
@@ -13,7 +12,7 @@ login_router = APIRouter()
 
 @login_router.post("/login")
 async def login(request: Request, identifier: str, password: str, method: str,
-                login_limit_service = Depends(LoginLimitPerIPService),
+                login_limit_service: LoginLimitPerIPService = Depends(),
                 login_service = Depends(get_login_service),
                 token_creator_service: AccessTokenCreatorService = Depends()):
     """ Return TokenBaseDTO """
