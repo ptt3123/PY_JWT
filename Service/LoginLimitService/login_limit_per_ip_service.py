@@ -12,10 +12,10 @@ class LoginLimitPerIPService(LoginLimitService):
     _minutes_block: int
     _data: dict[str, LoginBaseInfo]
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls):
         """ Singleton Pattern """
         if cls._instance is None:
-            cls._instance = super(LoginLimitService, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(LoginLimitService, cls).__new__(cls)
             cls._instance._max_count = settings.MAX_LOGIN_PER_IP
             cls._instance._minutes_block = settings.MINUTES_LOCK_LOGIN_PER_IP
             cls._instance._data = {}

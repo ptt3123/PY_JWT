@@ -1,11 +1,9 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 
+from Dependency import get_login_service
 from exception import (USER_NOT_FOUND_EXCEPTION,
-                       METHOD_NOT_FOUND_EXCEPTION,
                        TOO_MUCH_LOGIN_REQUEST_EXCEPTION)
 from Service.LoginLimitService import LoginLimitPerIPService
-from DAO.UserDAO import UserLoginDAO
-from Service.UserService.UserLoginService import UserLoginServiceFactory
 from Service.JWTService import AccessTokenCreatorService
 
 
@@ -13,22 +11,15 @@ app = FastAPI()
 
 
 @app.post("/login")
-async def login(request: Request, identifier: str, password: str, method: str):
+async def login(request: Request, identifier: str, password: str, method: str,
+                login_limit_service = Depends(LoginLimitPerIPService),
+                login_service = Depends(get_login_service)):
     """"""
 
-    login_limit_service = LoginLimitPerIPService()
     if not await login_limit_service.check(request.client.host):
         raise TOO_MUCH_LOGIN_REQUEST_EXCEPTION
 
-    user_login_dao = UserLoginDAO()
-    try:
-        service = UserLoginServiceFactory.get_user_login_service(
-            method, user_login_dao)
-
-    except Exception as e:
-        raise METHOD_NOT_FOUND_EXCEPTION
-
-    user = await service.authenticate(identifier, password)
+    user = await login_service.authenticate(identifier, password)
     if not user:
         raise USER_NOT_FOUND_EXCEPTION
 
