@@ -11,6 +11,6 @@ METHOD_NOT_FOUND_EXCEPTION = HTTPException(
 )
 
 TOO_MUCH_LOGIN_REQUEST_EXCEPTION = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
+    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
     detail="Too Much Login Request!!!",
 )

@@ -3,7 +3,7 @@ from fastapi import Depends
 from DAO.UserDAO import UserLoginDAO
 from exception import METHOD_NOT_FOUND_EXCEPTION
 from Service.UserService.UserLoginService import *
-from .get_user_login_dao import get_user_login_dao
+from ..DAODependency import get_user_login_dao
 
 
 async def get_login_service(

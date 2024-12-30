@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
 
-from .LoginInfo import LoginInfo
 
-
-class LoginLimitService(ABC):
+class RequestLimitService(ABC):
     """"""
 
     @abstractmethod

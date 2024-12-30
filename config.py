@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     SECRET_KEY: str
     DATABASE_URL: str
+    MAX_REQUEST_PER_IP: int
+    MINUTES_LOCK_REQUEST_PER_IP: int
     MAX_LOGIN_PER_IP: int
     MINUTES_LOCK_LOGIN_PER_IP: int
 

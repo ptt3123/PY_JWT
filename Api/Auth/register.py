@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from Dependency import get_register_service
+from Dependency.ServiceDependency import get_register_service
 from Schema.UserSchema import UserRegisterSchema
 from Service.UserService.UserRegisterService import UserRegisterService
 
@@ -14,12 +14,11 @@ async def register(
         user_register_service: UserRegisterService = Depends(get_register_service)):
     """"""
 
-    return await user_register_service.register(user)
-    # try:
-    #     return await user_register_service.register(user)
-    #
-    # except Exception as e:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail=str(e),
-    #     )
+    try:
+        return await user_register_service.register(user)
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
