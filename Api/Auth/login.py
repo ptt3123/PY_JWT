@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 
+from Schema.UserSchema import UserLoginSchema
 from Dependency import get_login_service
 from exception import (USER_NOT_FOUND_EXCEPTION,
                        TOO_MUCH_LOGIN_REQUEST_EXCEPTION)
@@ -11,7 +12,7 @@ login_router = APIRouter()
 
 
 @login_router.post("/login")
-async def login(request: Request, identifier: str, password: str, method: str,
+async def login(request: Request, method: str, user: UserLoginSchema = Depends(),
                 login_limit_service: LoginLimitPerIPService = Depends(),
                 login_service = Depends(get_login_service),
                 token_creator_service: AccessTokenCreatorService = Depends()):
@@ -20,7 +21,7 @@ async def login(request: Request, identifier: str, password: str, method: str,
     if not await login_limit_service.check(request.client.host):
         raise TOO_MUCH_LOGIN_REQUEST_EXCEPTION
 
-    user = await login_service.authenticate(identifier, password)
+    user = await login_service.authenticate(user.identifier, user.password)
     if not user:
         raise USER_NOT_FOUND_EXCEPTION
 

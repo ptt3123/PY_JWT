@@ -5,7 +5,7 @@ from exception import METHOD_NOT_FOUND_EXCEPTION
 from Service.UserService.UserLoginService import *
 
 
-def get_login_service(method: str,
+async def get_login_service(method: str,
                       user_login_dao: UserLoginDAO = Depends()) \
         -> UserLoginService:
     """"""
