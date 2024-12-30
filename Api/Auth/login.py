@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request, Depends, Body
 
 from Schema.UserSchema import UserLoginSchema
 from Dependency import get_login_service
@@ -12,7 +12,7 @@ login_router = APIRouter()
 
 
 @login_router.post("/login")
-async def login(request: Request, method: str, user: UserLoginSchema = Depends(),
+async def login(request: Request, method: str, user: UserLoginSchema = Body(),
                 login_limit_service: LoginLimitPerIPService = Depends(),
                 login_service = Depends(get_login_service),
                 token_creator_service: AccessTokenCreatorService = Depends()):

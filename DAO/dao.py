@@ -3,35 +3,42 @@ from typing import Type
 from sqlalchemy import Select, Result
 from sqlalchemy.exc import SQLAlchemyError
 
-from database import async_session_maker, Base
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from Service.AsyncSessionProviderService import AsyncSessionProviderService
+from database import Base
 
 
 class DAO(ABC):
     """"""
 
-    def __init__(self):
-        self._session_maker: async_sessionmaker = async_session_maker
+    def __init__(self, session_provider_service: AsyncSessionProviderService):
+        self._session_provider_service = session_provider_service
 
     async def execute_with_select(self, query: Select) -> Result:
+        session = await self._session_provider_service.get_session()
+
         try:
-            async with self._session_maker() as session:
-                result = await session.execute(query)
+            result = await session.execute(query)
+            return result
 
         except SQLAlchemyError as e:
             raise Exception(str(e))
 
-        return result
+        finally:
+            await session.close()
+
 
     async def execute_with_add(self, model: Type[Base]) -> Type[Base]:
+        session = await self._session_provider_service.get_session()
+
         try:
-            async with self._session_maker() as session:
-                session.add(model)
-                await session.commit()
-                await session.refresh(model)
+            session.add(model)
+            await session.commit()
+            await session.refresh(model)
+            return model
 
         except SQLAlchemyError as e:
             await session.rollback()
             raise Exception(str(e))
 
-        return model
+        finally:
+            await session.close()
