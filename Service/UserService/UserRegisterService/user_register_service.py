@@ -34,15 +34,18 @@ class UserRegisterService(UserService):
         :return: Exception Dict Like {"ptt": "This Username Has Been Used!!!"}, ...
         """
 
+        users = await self._user_register_dao.check_user_unique_info(
+            username, email, phone_number
+        )
+
         exception_dict = {}
 
-        if await self._user_register_dao.is_username_used(username):
-            exception_dict.update({f"{username}": "This Username Has Been Used!!!"})
-
-        if await self._user_register_dao.is_email_used(email):
-            exception_dict.update({f"{email}": "This Email Has Been Used!!!"})
-
-        if await self._user_register_dao.is_phone_number_used(phone_number):
-            exception_dict.update({f"{phone_number}": "This Phone Number Has Been Used!!!"})
+        for user in users:
+            if user.username == username:
+                exception_dict["username"] = "This Username Has Been Used!!!"
+            if user.email == email:
+                exception_dict["email"] = "This Email Has Been Used!!!"
+            if user.phone_number == phone_number:
+                exception_dict["phone_number"] = "This Phone Number Has Been Used!!!"
 
         return exception_dict

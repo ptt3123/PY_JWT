@@ -35,53 +35,21 @@ class UserRegisterDAO(UserDAO):
         user = await self.execute_with_add(user)
         return UserInfoDTO(user.username, user.first_name, user.last_name)
 
-    async def is_username_used(self, username: str) -> bool:
+    async def check_user_unique_info(self, username: str, email: str, phone_number: str):
 
         """
-        If Username Has Been Used Return True, Else False
+        Query User Has Info Of New User
 
         :param username: (:class:`str`)
-        :return: (:class:`bool`)
-        """
-
-        query = select(User.username).where(User.username.__eq__(username))
-        result = await self.execute_with_select(query)
-
-        if result.scalar():
-            return True
-        else:
-            return False
-
-    async def is_email_used(self, email: str) -> bool:
-
-        """
-        If Email Has Been Used Return True, Else False
-
         :param email: (:class:`str`)
-        :return: (:class:`bool`)
-        """
-
-        query = select(User.username).where(User.email.__eq__(email))
-        result = await self.execute_with_select(query)
-
-        if result.scalar():
-            return True
-        else:
-            return False
-
-    async def is_phone_number_used(self, phone_number: str) -> bool:
-
-        """
-        If Phone Number Has Been Used Return True, Else False
-
         :param phone_number: (:class:`str`)
-        :return: (:class:`bool`)
+        :return: (:class:`Tuple`) All User Have Info Like New User's Info
         """
 
-        query = select(User.username).where(User.phone_number.__eq__(phone_number))
-        result = await self.execute_with_select(query)
+        query = (select(User.username, User.email, User.phone_number)
+                 .where((User.username.__eq__(username)) |
+                        (User.email.__eq__(email)) |
+                        (User.phone_number.__eq__(phone_number))))
 
-        if result.scalar():
-            return True
-        else:
-            return False
+        result = await self.execute_with_select(query)
+        return result.fetchall()

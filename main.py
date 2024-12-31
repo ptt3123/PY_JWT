@@ -32,12 +32,13 @@ request_limit_by_ip_service = RequestLimitByIPService(
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
-    ip = request.client.host
+    ip = request.headers.get("X-Forwarded-For", request.client.host)
 
     if not await request_limit_by_ip_service.check(ip):
         return JSONResponse(
             status_code=429,
-            content={"message": "Too many requests. Please try again later."}
+            content={"message": "Too many requests. Please try again later."},
+            headers={"Retry-After": f"{settings.MINUTES_LOCK_REQUEST_PER_IP} minutes."},
         )
 
     response = await call_next(request)
