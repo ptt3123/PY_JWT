@@ -10,7 +10,15 @@ async def get_login_service(
         method: str,
         user_login_dao: UserLoginDAO = Depends(get_user_login_dao)) \
         -> UserLoginService:
-    """"""
+    """
+    Factory Design Pattern For Chose What Service To Return
+    (:class:`UserLoginByUsernameService` or :class:`UserLoginByEmailService`),
+    Can Raise Exception
+
+    :param method: (:class:`str`)
+    :param user_login_dao: (:class:`UserLoginDAO`)
+    :return: (:class:`UserLoginService`)
+    """
 
     if method == "username":
         return UserLoginByUsernameService(user_login_dao)

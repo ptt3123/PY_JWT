@@ -1,5 +1,7 @@
 class TokenBaseDTO:
-    """"""
+    """
+    DTO For Token Base, Contain ``access_token`` (Access Token - JWT) And ``token_type`` ("bearer")
+    """
 
     def __init__(self, access_token: str, token_type: str = 'bearer'):
         self.access_token = access_token

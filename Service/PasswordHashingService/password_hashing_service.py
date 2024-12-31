@@ -6,11 +6,11 @@ class PasswordHashingService:
         pass
 
     @staticmethod
-    def get_hashed_password(password: str):
+    def get_hashed_password(password: str) -> str:
         salt = bcrypt.gensalt()
         password_hash = bcrypt.hashpw(password.encode("utf-8"), salt)
-        return password_hash
+        return str(password_hash)
 
     @staticmethod
-    def verify_password(password: str, user_password: str):
+    def verify_password(password: str, user_password: str) -> bool:
         return bcrypt.checkpw(password.encode("utf-8"), user_password.encode("utf-8"))

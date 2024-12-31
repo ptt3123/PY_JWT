@@ -8,7 +8,18 @@ from database import Base
 
 
 class DAO(ABC):
-    """"""
+    """
+    Base DAO Class
+
+    Property:
+
+    - ``_session_provider_service`` (:class:`AsyncSessionProviderService`) Async Session Provider Service
+
+    Functions (Execute Query With Try Except):
+
+    - ``execute_with_select``
+    - ``execute_with_add``
+    """
 
     def __init__(self, session_provider_service: AsyncSessionProviderService):
         self._session_provider_service = session_provider_service
@@ -21,7 +32,7 @@ class DAO(ABC):
             return result
 
         except SQLAlchemyError as e:
-            raise Exception(str(e))
+            raise e
 
         finally:
             await session.close()
@@ -38,7 +49,7 @@ class DAO(ABC):
 
         except SQLAlchemyError as e:
             await session.rollback()
-            raise Exception(str(e))
+            raise e
 
         finally:
             await session.close()

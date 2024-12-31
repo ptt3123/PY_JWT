@@ -11,7 +11,11 @@ async def login_limit_dependency(
     """
     Check If User Or Host Can Log In More Or Not
 
-    If Not Raise Exception
+    If Not Raise Exception, Else Return None
+
+    :param request: (:class:`Request`)
+    :param login_limit_service: (:class:`RequestLimitService`)
+    :return: (:class:`None`)
     """
 
     if not await login_limit_service.check(request.client.host):

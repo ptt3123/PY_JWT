@@ -3,6 +3,20 @@ import re
 
 
 class UserRegisterSchema(BaseModel):
+    """
+    Schema For User Register With Validate
+
+    Properties:
+
+    - ``username``: (:class:`str`)
+    - ``password``: (:class:`str`): Must Strong
+    - ``first_name``: (:class:`str`)
+    - ``last_name``: (:class:`str`)
+    - ``email`` : (:class:`EmailStr`)
+    - ``phone_number``: (:class:`str`): Must Contain 10 Digits
+    - ``re_password``: (:class:`str`): Must Like ``password``
+    """
+
     username: str
     password: str
     first_name: str
