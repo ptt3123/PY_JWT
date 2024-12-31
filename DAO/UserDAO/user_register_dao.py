@@ -10,10 +10,10 @@ class UserRegisterDAO(UserDAO):
     """"""
 
     async def create_user(self, user_register: UserRegisterSchema) \
-            -> UserInfoDTO:
+            -> bool:
         """"""
 
         user = User(**user_register.model_dump(exclude={"re_password"}))
         user.update_at = datetime.now(timezone.utc)
         user = await self.execute_with_add(user)
-        return UserInfoDTO(user.username, user.first_name, user.last_name)
+        return True

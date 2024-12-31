@@ -3,10 +3,13 @@ from ..request_limit_service import RequestLimitService
 
 
 class RequestLimitByIPService(RequestLimitService):
-    """"""
-    _max_count: int
-    _minutes_block: int
-    _data: dict[str, RequestBaseInfo]
+    """
+    Request Limit By Ip Service, Deployment All Of :class:`RequestLimitService`
+
+    Properties: Like RequestLimitService, But Value Of _data is :class:`RequestBaseInfo`, Not :class:`RequestInfo`
+
+    Functions: Just Like RequestLimitService, With Key user Is IP Of Host
+    """
 
     def __init__(self, max_count: int, minutes_block: int):
         self._max_count = max_count
@@ -18,7 +21,11 @@ class RequestLimitByIPService(RequestLimitService):
         self._data.update({user: RequestBaseInfo()})
 
     async def check(self, user: str) -> bool:
-        """ Check If Host Can Request More And Update Info """
+        """
+        Check If Host Can Request More And Update Info
+
+        If _data Contain IP Of Host, Call Add
+        """
         if not self._data.__contains__(user):
             await self.add(user)
             return True

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 
 from Dependency.ServiceDependency import get_register_service
 from Schema.UserSchema import UserRegisterSchema
@@ -15,9 +16,10 @@ async def register(
     """"""
 
     try:
-        return await user_register_service.register(user)
+        await user_register_service.register(user)
+        return {"message": "success!"}
 
-    except Exception as e:
+    except SQLAlchemyError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
