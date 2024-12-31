@@ -8,6 +8,7 @@ from database import Base
 
 
 class DAO(ABC):
+
     """
     Base DAO Class
 

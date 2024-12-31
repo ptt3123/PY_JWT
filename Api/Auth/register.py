@@ -13,11 +13,14 @@ register_router = APIRouter()
 async def register(
         user: UserRegisterSchema,
         user_register_service: UserRegisterService = Depends(get_register_service)):
+
     """
     Endpoint For User To Register
 
     :param user: (:class:`UserRegisterSchema`) Info Of User
+
     :param user_register_service: (:class:`UserRegisterService`) Service To Register User
+
     :return: (:class:`UserInfoDTO`)
     """
 

@@ -3,13 +3,15 @@ import re
 
 
 class UserRegisterSchema(BaseModel):
+
     """
     Schema For User Register With Validate
 
     Properties:
 
     - ``username``: (:class:`str`)
-    - ``password``: (:class:`str`): Must Strong
+    - ``password``: (:class:`str`): Length Must >= 8, Contain One Digit,
+    Lowercase Char, Uppercase Char And Special Char
     - ``first_name``: (:class:`str`)
     - ``last_name``: (:class:`str`)
     - ``email`` : (:class:`EmailStr`)

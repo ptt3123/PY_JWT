@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     MINUTES_LOCK_REQUEST_PER_IP: int
     MAX_LOGIN_PER_IP: int
     MINUTES_LOCK_LOGIN_PER_IP: int
+    JWT_ALGORITHM: str
+    ACCESS_TOKEN_EXPIRES_MINUTES: int
 
     model_config= SettingsConfigDict(extra= "ignore", env_file= ".env")
 

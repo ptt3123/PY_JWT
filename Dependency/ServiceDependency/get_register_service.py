@@ -7,6 +7,7 @@ from ..DAODependency import get_user_register_dao
 async def get_register_service(
         user_register_dao: UserRegisterDAO = Depends(get_user_register_dao)) \
         -> UserRegisterService:
+
     """
     Get RegisterService
 

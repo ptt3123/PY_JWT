@@ -8,6 +8,7 @@ from .user_dao import UserDAO
 
 
 class UserRegisterDAO(UserDAO):
+
     """
     User DAO For Register
 
@@ -21,6 +22,7 @@ class UserRegisterDAO(UserDAO):
 
     async def create_user(self, user_register: UserRegisterSchema) \
             -> UserInfoDTO:
+
         """
         Create New User
 
@@ -34,6 +36,7 @@ class UserRegisterDAO(UserDAO):
         return UserInfoDTO(user.username, user.first_name, user.last_name)
 
     async def is_username_used(self, username: str) -> bool:
+
         """
         If Username Has Been Used Return True, Else False
 
@@ -50,6 +53,7 @@ class UserRegisterDAO(UserDAO):
             return False
 
     async def is_email_used(self, email: str) -> bool:
+
         """
         If Email Has Been Used Return True, Else False
 
@@ -66,6 +70,7 @@ class UserRegisterDAO(UserDAO):
             return False
 
     async def is_phone_number_used(self, phone_number: str) -> bool:
+
         """
         If Phone Number Has Been Used Return True, Else False
 

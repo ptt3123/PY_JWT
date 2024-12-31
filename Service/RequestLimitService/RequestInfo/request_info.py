@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 
 class RequestInfo(ABC):
+
     """
     Abstract Class Contain Info About Request Of User Or Host.
 
