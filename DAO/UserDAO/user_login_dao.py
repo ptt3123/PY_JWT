@@ -26,7 +26,10 @@ class UserLoginDAO(UserDAO):
         query = select(User).where(User.username.__eq__(username))
         result = await self.execute_with_select(query)
         user = result.fetchone()
-        return user[0]
+
+        if user:
+            return user[0]
+        return None
 
     async def read_user_by_email(self, email: str) -> User | None:
         """
@@ -39,4 +42,7 @@ class UserLoginDAO(UserDAO):
         query = select(User).where(User.email.__eq__(email))
         result = await self.execute_with_select(query)
         user = result.fetchone()
-        return user[0]
+
+        if user:
+            return user[0]
+        return None

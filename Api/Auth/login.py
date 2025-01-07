@@ -24,17 +24,11 @@ async def login(request: Request, method: str, user: UserLoginSchema = Body(),
     Endpoint For User To Login
 
     :param request: (:class:`Request`)
-
     :param method: (:class:`str`) Method User Want Login By. Ex "username", "email", ...
-
     :param user: (:class:`UserLoginSchema`) Info Of User For Log in, Common Is ``identifier`` And ``password``
-
     :param login_limit: (:class:`None`) Call Dependency For Check If User Can Log in More
-
     :param login_service: (:class:`UserLoginService`) Service For Handle Request Log in Of User
-
     :param token_creator_service: (:class:`AccessTokenCreatorService`) Service For Create JWT For Authenticate
-
     :return: (:class:`TokenBaseDTO`)
     """
 

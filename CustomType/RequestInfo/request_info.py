@@ -1,42 +1,57 @@
-from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+import time
 
 
-class RequestInfo(ABC):
-
-    """
-    Abstract Class Contain Info About Request Of User Or Host.
-
-    Properties:
-
-    - _request_count (int): Count Of User Or Host's Request.
-    - _last_request (datetime): Time Of Last User Or Host's Request.
-
-    Functions:
-
-    - check: Check If User Or Host Can Request More And Update Or Reset Info
-    - update: Update Info Of User Or Host
-    - reset: Reset Info Of User Or Host
-    """
+class RequestInfo:
+    """"""
 
     _request_count: int
-    _last_request: datetime
+    _current_window: int
 
-    def __init__(self):
+    def __init__(self, window: int):
+        current_time = int(time.time())
+        current_window = current_time // window
+
         self._request_count = 1
-        self._last_request = datetime.now(timezone.utc)
+        self._current_window = current_window
 
-    @abstractmethod
-    async def check(self, minutes_block: int, max_count: int) -> bool:
-        """ Check If User Or Host Can Send Request More Or Not """
-        pass
+    async def check(self, max_request: int, window : int) -> bool:
+        """
+        Check If User Or Host Can Send Request More Or Not
 
-    @abstractmethod
-    async def update(self, now: datetime) -> None:
-        """ Update Info """
-        pass
+        :param max_request:
+        :param window:
+        :return:
+        """
 
-    @abstractmethod
-    async def reset(self, now: datetime) -> None:
-        """ Reset Info """
-        pass
+        current_time = int(time.time())
+        current_window = current_time // window
+
+        if self._current_window < current_window:
+            await self.reset(current_window)
+            return True
+
+        if self._request_count < max_request:
+            await self.update()
+            return True
+
+        return False
+
+    async def update(self) -> None:
+        """
+        Update Request Count
+
+        :return: (None)
+        """
+
+        self._request_count += 1
+
+    async def reset(self, current_window : int) -> None:
+        """
+        Reset Request To 1 And Last Window To ``current_window``
+
+        :param current_window:
+        :return: (None)
+        """
+
+        self._request_count = 1
+        self._current_window = current_window
