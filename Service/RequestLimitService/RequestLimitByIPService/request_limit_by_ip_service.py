@@ -1,4 +1,4 @@
-from ..RequestInfo import RequestBaseInfo
+from CustomType.RequestInfo import RequestBaseInfo
 from ..request_limit_service import RequestLimitService
 
 

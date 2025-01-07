@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .RequestInfo import RequestInfo
+from CustomType.RequestInfo import RequestInfo
 
 
 class RequestLimitService(ABC):
