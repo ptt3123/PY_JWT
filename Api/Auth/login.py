@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request, Depends, Body, HTTPException, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
 from Schema.UserSchema import UserLoginSchema
@@ -37,9 +38,17 @@ async def login(request: Request, method: str, user: UserLoginSchema = Body(),
         if not user:
             raise USER_NOT_FOUND_EXCEPTION
 
-        return await token_creator_service.create_token_base(
+        token = await token_creator_service.create_token_base(
             {"uid": user.id, "iac": user.is_active, "isf": user.is_staff}
         )
+
+        response = JSONResponse(content=token.dict())
+        response.set_cookie(
+            key="refresh_token", value=token.access_token,
+            domain="127.0.0.1", max_age=3*3600,
+            path="/auth/refresh", httponly=True, secure=False
+        )
+        return response
 
     except SQLAlchemyError as e:
         raise HTTPException(

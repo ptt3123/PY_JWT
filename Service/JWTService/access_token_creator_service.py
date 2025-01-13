@@ -1,5 +1,6 @@
+import time
 from datetime import datetime, timezone, timedelta
-import jwt
+import jwt, asyncio
 
 from DTO import TokenBaseDTO
 from .jwt_service import JWTService
@@ -12,5 +13,7 @@ class AccessTokenCreatorService(JWTService):
                timedelta(minutes=self._access_token_expire_minutes))
 
         data.update({"exp" : exp})
-        jwt_token = jwt.encode(data, self._private_key, self._algorithm)
+        key = self._private_key
+        algorithm = self._algorithm
+        jwt_token = await asyncio.to_thread(jwt.encode, data, key, algorithm)
         return TokenBaseDTO(access_token=jwt_token)
