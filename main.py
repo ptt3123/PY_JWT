@@ -22,7 +22,7 @@ app = FastAPI(
 app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 # Custom Middleware
-app.add_middleware(CSRFMiddleware)
+# app.add_middleware(CSRFMiddleware)
 app.add_middleware(RateLimitMiddleware)
 
 app.include_router(router)
