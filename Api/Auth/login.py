@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends, Body, HTTPException, status
+from fastapi import APIRouter, Request, Depends, Form, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -15,7 +15,7 @@ login_router = APIRouter()
 
 
 @login_router.post("/login")
-async def login(request: Request, method: str, user: UserLoginSchema = Body(),
+async def login(request: Request, method: str, user: UserLoginSchema = Form(),
                 login_limit = Depends(login_limit_dependency),
                 login_service: UserLoginService = Depends(get_login_service),
                 token_creator_service: AccessTokenCreatorService =

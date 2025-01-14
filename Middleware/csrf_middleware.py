@@ -1,13 +1,8 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from itsdangerous import URLSafeTimedSerializer, BadSignature
 
-from config import settings
-
-
-# CSRFMiddleware
-serializer = URLSafeTimedSerializer(settings.SECRET_KEY)
+from Dependency.ServiceDependency import csrf_token_service
 
 
 class CSRFMiddleware(BaseHTTPMiddleware):
@@ -21,23 +16,15 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
             if not csrf_token or not form_token:
                 return JSONResponse(
-                    status_code=503,
+                    status_code=404,
                     content={"message": "CSRF token missing."},
                 )
 
-            try:
+            if ((csrf_token != form_token) or
+                    (not await csrf_token_service.verify_csrf_token(csrf_token))):
 
-                # Xác minh token
-                serializer.loads(csrf_token)
-                if csrf_token != form_token:
-                    return JSONResponse(
-                        status_code=503,
-                        content={"message": "Invalid CSRF token."},
-                    )
-
-            except BadSignature:
                 return JSONResponse(
-                    status_code=503,
+                    status_code=400,
                     content={"message": "Invalid CSRF token."},
                 )
 
