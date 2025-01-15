@@ -19,13 +19,15 @@ login_router = APIRouter()
 
 
 @login_router.post("/login")
-async def login(request: Request, background_tasks: BackgroundTasks,
-                method: str, user: UserLoginSchema = Form(),
-                login_limit = Depends(login_limit_dependency),
-                login_service: UserLoginService = Depends(get_login_service),
-                token_creator_service: AccessTokenCreatorService =
-                Depends(get_access_token_creator_service),
-                smtp_service: SMTPService = Depends(get_smtp_service)):
+async def login(
+        request: Request, background_tasks: BackgroundTasks,
+        method: str, user: UserLoginSchema = Form(),
+        login_limit = Depends(login_limit_dependency),
+        login_service: UserLoginService = Depends(get_login_service),
+        token_creator_service: AccessTokenCreatorService =
+        Depends(get_access_token_creator_service),
+        smtp_service: SMTPService = Depends(get_smtp_service)
+):
 
     """
     Endpoint For User To Login

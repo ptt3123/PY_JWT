@@ -10,7 +10,8 @@ get_csrf_token_router = APIRouter()
 
 @get_csrf_token_router.get("/get_csrf_token")
 async def get_csrf_token(
-        csrf_token_service: CRSFTokenService = Depends(get_csrf_token_service)):
+        csrf_token_service: CRSFTokenService = Depends(get_csrf_token_service)
+):
 
     token = await csrf_token_service.generate_csrf_token()
 

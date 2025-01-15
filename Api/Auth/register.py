@@ -13,7 +13,8 @@ register_router = APIRouter()
 @register_router.post("/register")
 async def register(
         user: UserRegisterSchema,
-        user_register_service: UserRegisterService = Depends(get_register_service)):
+        user_register_service: UserRegisterService = Depends(get_register_service)
+):
 
     """
     Endpoint For User To Register

@@ -8,7 +8,9 @@ refresh_router = APIRouter()
 
 
 @refresh_router.get("/refresh")
-async def refresh(request: Request):
+async def refresh(
+        request: Request
+):
     """
     Use Refresh Token In Cookie To Return New Access Token. If Refresh Token Not Found Raise Exception
 
