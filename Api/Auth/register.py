@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from Dependency.ServiceDependency import get_register_service
 from Schema.UserSchema import UserRegisterSchema
 from Service.UserService.UserRegisterService import UserRegisterService
+from exception import DATABASE_EXCEPTION
 
 
 register_router = APIRouter()
@@ -39,7 +40,5 @@ async def register(
         )
 
     except SQLAlchemyError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e),
-        )
+        print(str(e))
+        raise DATABASE_EXCEPTION

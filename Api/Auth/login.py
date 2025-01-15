@@ -8,7 +8,7 @@ from Dependency.ServiceDependency import (get_login_service, get_smtp_service,
                                           get_access_token_creator_service)
 from Dependency.EndpointDependency import login_limit_dependency
 from Service.SMTPService import SMTPService
-from exception import USER_NOT_FOUND_EXCEPTION
+from exception import USER_NOT_FOUND_EXCEPTION, DATABASE_EXCEPTION
 from Service.UserService import UserLoginService
 from Service.JWTService import AccessTokenCreatorService
 from Service.EmailService import EmailService
@@ -75,7 +75,5 @@ async def login(request: Request, background_tasks: BackgroundTasks,
 
 
     except SQLAlchemyError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e),
-        )
+        print(str(e))
+        raise DATABASE_EXCEPTION

@@ -19,3 +19,8 @@ REFRESH_TOKEN_NOT_FOUND = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND,
     detail="Refresh Token Not Found!!!"
 )
+
+DATABASE_EXCEPTION = HTTPException(
+    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+    detail="Connection Error. Please Try Again Later!!!"
+)
