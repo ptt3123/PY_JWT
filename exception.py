@@ -24,3 +24,13 @@ DATABASE_EXCEPTION = HTTPException(
     status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
     detail="Connection Error. Please Try Again Later!!!"
 )
+
+EXPIRED_TOKEN = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Token has expired!!!"
+)
+
+INVALID_TOKEN = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Invalid token!!!"
+)

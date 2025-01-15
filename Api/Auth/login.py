@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Request, Depends, Form, BackgroundTasks, HTTPException, status
+from fastapi import APIRouter, Request, Depends, BackgroundTasks
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
+from typing import Optional
 
-from Schema.UserSchema import UserLoginSchema
+from DTO import TokenDataDTO
 from Dependency.ServiceDependency import (get_login_service, get_smtp_service,
                                           get_access_token_creator_service)
 from Dependency.EndpointDependency import login_limit_dependency
@@ -21,7 +23,7 @@ login_router = APIRouter()
 @login_router.post("/login")
 async def login(
         request: Request, background_tasks: BackgroundTasks,
-        method: str, user: UserLoginSchema = Form(),
+        method: Optional[str] = "username", user_form: OAuth2PasswordRequestForm = Depends(),
         login_limit = Depends(login_limit_dependency),
         login_service: UserLoginService = Depends(get_login_service),
         token_creator_service: AccessTokenCreatorService =
@@ -32,19 +34,27 @@ async def login(
     """
     Endpoint For User To Login
 
+    :param user_form: (:class:`UserLoginSchema`) Info Of User For Log in, Common Is ``identifier`` And ``password``
+
     :param background_tasks: (:class:`BackgroundTasks`)
+
     :param smtp_service: (:class:`SMTPService`)
+
     :param request: (:class:`Request`)
+
     :param method: (:class:`str`) Method User Want Login By. Ex "username", "email", ...
-    :param user: (:class:`UserLoginSchema`) Info Of User For Log in, Common Is ``identifier`` And ``password``
+
     :param login_limit: (:class:`None`) Call Dependency For Check If User Can Log in More
+
     :param login_service: (:class:`UserLoginService`) Service For Handle Request Log in Of User
+
     :param token_creator_service: (:class:`AccessTokenCreatorService`) Service For Create JWT For Authenticate
+
     :return: (:class:`TokenBaseDTO`)
     """
 
     try:
-        user = await login_service.authenticate(user.identifier, user.password)
+        user = await login_service.authenticate(user_form.username, user_form.password)
         if not user:
             raise USER_NOT_FOUND_EXCEPTION
 
@@ -63,15 +73,15 @@ async def login(
 
 
         token = await token_creator_service.create_token_base(
-            {"uid": user.id, "iac": user.is_active, "isf": user.is_staff}
+            TokenDataDTO(user.id, user.is_active, user.is_staff)
         )
 
 
         response = JSONResponse(content=token.dict())
         response.set_cookie(
-            key="refresh_token", value=token.access_token,
-            domain="127.0.0.1", max_age=3*3600,
-            path="/auth/refresh", httponly=True, secure=False
+            key="refresh_token", value=token.access_token, max_age=3*3600,
+            domain="127.0.0.1", path="/auth/refresh",
+            httponly=True, secure=False, samesite="strict"
         )
         return response
 

@@ -1,4 +1,5 @@
 from fastapi import Depends
+from typing import Optional
 
 from DAO.UserDAO import UserLoginDAO
 from exception import METHOD_NOT_FOUND_EXCEPTION
@@ -7,7 +8,7 @@ from ..DAODependency import get_user_login_dao
 
 
 async def get_login_service(
-        method: str,
+        method: Optional[str] = "username",
         user_login_dao: UserLoginDAO = Depends(get_user_login_dao)) \
         -> UserLoginService:
 

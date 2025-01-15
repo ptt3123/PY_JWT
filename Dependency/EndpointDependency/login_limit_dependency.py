@@ -1,6 +1,6 @@
 from fastapi import Depends, Request
+from fastapi.security import OAuth2PasswordRequestForm
 
-from Schema.UserSchema import UserLoginSchema
 from exception import TOO_MUCH_LOGIN_REQUEST_EXCEPTION
 from Service.RateLimitService import RateLimitAdvancedService
 from ..ServiceDependency import (
@@ -9,7 +9,7 @@ from ..ServiceDependency import (
 
 async def login_limit_dependency(
         request: Request,
-        user: UserLoginSchema,
+        user_form: OAuth2PasswordRequestForm = Depends(),
         login_limit_by_ip_service: RateLimitAdvancedService =
         Depends(get_login_limit_by_ip_service),
         login_limit_by_identifier_service: RateLimitAdvancedService =
@@ -22,7 +22,7 @@ async def login_limit_dependency(
         # Soft Limit With CAPTCHA
         raise TOO_MUCH_LOGIN_REQUEST_EXCEPTION
 
-    if not await login_limit_by_identifier_service.check(user.identifier):
+    if not await login_limit_by_identifier_service.check(user_form.username):
         raise TOO_MUCH_LOGIN_REQUEST_EXCEPTION
 
     return

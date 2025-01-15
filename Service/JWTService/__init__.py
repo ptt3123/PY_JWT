@@ -1,2 +1,3 @@
 from .jwt_service import JWTService
 from .access_token_creator_service import AccessTokenCreatorService
+from .access_token_validator_service import AccessTokenValidatorService
