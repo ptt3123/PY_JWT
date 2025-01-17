@@ -29,4 +29,4 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(extra = "ignore", env_file = ".env")
 
 
-settings= Settings()
+settings = Settings()

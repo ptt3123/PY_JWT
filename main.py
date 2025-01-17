@@ -5,7 +5,8 @@ from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from contextlib import asynccontextmanager
 
 from Api import router
-from Middleware import CSRFMiddleware, RateLimitMiddleware, HeaderMiddleware
+from Middleware import (CSRFMiddleware, RateLimitMiddleware,
+                        HeaderMiddleware, LimitPayloadMiddleware)
 
 
 @asynccontextmanager
@@ -27,6 +28,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 # app.add_middleware(HeaderMiddleware)
 #
 # app.add_middleware(CSRFMiddleware)
+
+app.add_middleware(LimitPayloadMiddleware)
 
 app.add_middleware(RateLimitMiddleware)
 

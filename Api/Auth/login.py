@@ -16,7 +16,6 @@ from Service.JWTService import AccessTokenCreatorService
 from Service.EmailService import EmailService
 from Service.EmailTemplateService import EmailTemplateService
 
-
 login_router = APIRouter()
 
 
@@ -24,13 +23,12 @@ login_router = APIRouter()
 async def login(
         request: Request, background_tasks: BackgroundTasks,
         method: Optional[str] = "username", user_form: OAuth2PasswordRequestForm = Depends(),
-        login_limit = Depends(login_limit_dependency),
+        login_limit=Depends(login_limit_dependency),
         login_service: UserLoginService = Depends(get_login_service),
         token_creator_service: AccessTokenCreatorService =
         Depends(get_access_token_creator_service),
         smtp_service: SMTPService = Depends(get_smtp_service)
 ):
-
     """
     Endpoint For User To Login
 
@@ -58,28 +56,26 @@ async def login(
         if not user:
             raise USER_NOT_FOUND_EXCEPTION
 
-
         # Notify by email
         if smtp_service:
             server = smtp_service.connect()
             html_template = EmailTemplateService.get_login_notification_template(
                 user.username,
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                request.state.client_ip
             )
 
             background_tasks.add_task(
                 EmailService.send_mail,
                 server, user.email, "Login Notification", html_template)
 
-
         token = await token_creator_service.create_token_base(
             TokenDataDTO(user.id, user.is_active, user.is_staff)
         )
 
-
         response = JSONResponse(content=token.dict())
         response.set_cookie(
-            key="refresh_token", value=token.access_token, max_age=3*3600,
+            key="refresh_token", value=token.access_token, max_age=3 * 3600,
             domain="127.0.0.1", path="/auth/refresh",
             httponly=True, secure=False, samesite="strict"
         )
